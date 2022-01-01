@@ -4,7 +4,7 @@ public class Driver extends ApplicationUser implements IDriver {
 	/* Attributes */
 	private String drivingLicense;
 	private String nationalID;
-
+	private float balance;
 	private boolean approved;
 	private float avgRating;
 
@@ -16,7 +16,7 @@ public class Driver extends ApplicationUser implements IDriver {
 		super(userName, email, password, mobileNumber, keyType);
 		this.drivingLicense = drivingLicense;
 		this.nationalID = nationalID;
-
+		balance = 0;
 		avgRating = 0;
 		approved = false;
 	}
@@ -99,5 +99,18 @@ public class Driver extends ApplicationUser implements IDriver {
 				+ ("Driver's Driving License: " + getDrivingLicense() + "\n")
 				+ ("-----------------------------------\n");
 	}
+
+	@Override
+	public float getBalance() {
+		return balance;
+	}
+
+	@Override
+	public void setBalance(float value) {
+		balance = value;
+	}
+
+	
+	
 
 }

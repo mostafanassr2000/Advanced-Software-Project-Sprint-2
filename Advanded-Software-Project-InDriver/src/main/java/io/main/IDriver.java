@@ -19,6 +19,9 @@ public interface IDriver {
 	public IRide getRide();
 	
 	public String toString();
+	public float getBalance();
+	public void setBalance(float value);
+	
 }
 	
 

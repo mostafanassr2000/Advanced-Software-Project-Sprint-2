@@ -1,12 +1,17 @@
 package io.main;
 
+import java.util.Date;
+
 public class Ride implements IRide{
 	/*Attributes*/
 	private String source;
 	private String destination;
-	private float offer;
+	private float offer; //before discounts
+	private float discountedOffer; //after discounts
 	private boolean accepted;
 	private int rate;
+	private int passengersNum;//set in constructor
+	private Discount discount;
 	
 	private IUser user;
 	private IDriver driver;
@@ -14,13 +19,14 @@ public class Ride implements IRide{
 	private IPersistence persistence;
 	
 	/*Constructor*/
-	public Ride(String source, String destination, IUser user, IPersistence persistence) {
+	public Ride(String source, String destination, IUser user, IPersistence persistence
+			,int passengersNum) {
 		this.source = source;
 		this.destination = destination;
 		this.persistence = persistence;
 		this.user = user;
 		this.accepted = false;
-		
+		this.passengersNum = passengersNum;
 	}
 	
 	/*Methods*/
@@ -32,6 +38,8 @@ public class Ride implements IRide{
 	public void setDriverOffer(float offer, IDriver driver) {
 		this.offer = offer;
 		this.driver = driver;
+		float rate = discount.calculateDiscount(this);
+		this.discountedOffer = offer - (offer*rate);
 		user.receiveOffer(this);
 	}
 	
@@ -50,6 +58,9 @@ public class Ride implements IRide{
 	//Ride Acceptance
 	public void setAcceptance(boolean acceptance) {
 		this.accepted = acceptance;
+		//get the balance of the driver
+		float driverBalance = this.getDriver().getBalance();
+		this.getDriver().setBalance(driverBalance += offer);
 	}
 	
 	public boolean isAccepted() {
@@ -68,13 +79,17 @@ public class Ride implements IRide{
 	public String getSource() {
 		return source;
 	}
+	
+	public int getPassengersNum() {
+		return passengersNum;
+	}
 
 	public String getDestination() {
 		return destination;
 	}
 	
 	public float getOffer() {
-		return offer;
+		return discountedOffer;
 	}
 
 	public int getRate() {

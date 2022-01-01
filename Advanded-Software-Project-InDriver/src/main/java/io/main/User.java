@@ -1,18 +1,24 @@
 package io.main;
+
+import java.util.Date;
+
 public class User extends ApplicationUser implements IUser{
 	
 	/*Attributes*/
 	private float receivedOffer;
 	private IRide ride;
+	private Date birthDate;
+	private boolean firstRide;
 	
 	/*Constructor*/
-	public User(String username, String email, String password, String mobileNumber, String keyType) {
+	public User(String username, String email, String password, String mobileNumber, String keyType, Date birthDate) {
 		super(username, email, password, mobileNumber, keyType);
+		this.birthDate = birthDate;
 	}
 
 	/*Methods*/
-	public boolean requestRide(String source, String destination) {
-		Ride newRide = new Ride(source, destination, this, persistence);
+	public boolean requestRide(String source, String destination, int passengersNum) {
+		Ride newRide = new Ride(source, destination, this, persistence, passengersNum);
 		return newRide.requestRide();
 	}
 	
@@ -45,8 +51,16 @@ public class User extends ApplicationUser implements IUser{
 	
 
 	/*Getters*/
+	public Date getBirthDate() {		
+		return birthDate;
+	}
+
 	public float getOffer() {
 		return receivedOffer;
+	}
+	
+	public boolean getFirstRide() {
+		return firstRide;
 	}
 	
 	public String toString() {
@@ -56,4 +70,5 @@ public class User extends ApplicationUser implements IUser{
 				("-----------------------------------\n");      
 	}
 
+	
 }
