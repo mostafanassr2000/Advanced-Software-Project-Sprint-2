@@ -6,10 +6,13 @@ public class FavArea {
 	private IDriver driver;
 	
 	/*Constructor*/
+	
 	public FavArea(String favArea, IDriver driver) {
 		this.favArea = favArea;
 		this.driver = driver;
 	}
+
+	/*Methods*/
 
 	/*Getters*/
 	public String getFavArea(){

@@ -1,14 +1,17 @@
 package io.main;
+
+import java.util.ArrayList;
+
 public interface IPersistence {
 	/*Authorization*/
 	public boolean register(ApplicationUser AU);
 	public ApplicationUser login(String un, String pw);
 	
 	/*Admin Part*/
-	public void listUnapprovedDrivers();
+	public ArrayList<Driver> listUnapprovedDrivers();
 	public boolean verifyDriver(String driverUsername);
 	
-	public void listSuspendedUsers();
+	public ArrayList<ApplicationUser> listSuspendedUsers();
 	public boolean suspend(String username);
 	public boolean unsuspend(String username);
 	
@@ -18,10 +21,17 @@ public interface IPersistence {
 	
 	/*Driver Part*/
 	public void addFavArea(FavArea favArea);
-	public boolean listDriverRatings(IDriver driver);
+	public ArrayList<String> listFavoriteAreas(String driverUsername);
+	
+	public ArrayList<IRide> listDriverRatings(IDriver driver);
 	public float calcDriverAvgRating(IDriver driver);
 	
 	/*Ride Part*/
 	public boolean notify(String source, IRide ride);
 	public void addRide(IRide ride);
+	
+	
+	public ArrayList<ApplicationUser> getUsers();
+	
+	public ApplicationUser getObj(String username);
 }

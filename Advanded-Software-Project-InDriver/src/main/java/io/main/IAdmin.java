@@ -1,11 +1,13 @@
 package io.main;
 
+import java.util.ArrayList;
+
 public interface IAdmin{
 
-	public void listUnapprovedDrivers();
+	public ArrayList<Driver> listUnapprovedDrivers();
 	public boolean verifyDriver(String driverUserName);
 	
-	public void listSuspendedUsers();
+	public ArrayList<ApplicationUser> listSuspendedUsers();
 	public boolean suspend(String username);
 	public boolean unsuspend(String username);
 }
