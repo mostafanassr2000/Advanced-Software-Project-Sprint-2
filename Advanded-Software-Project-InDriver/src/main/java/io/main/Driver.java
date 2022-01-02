@@ -10,16 +10,19 @@ public class Driver extends ApplicationUser implements IDriver {
 	/* Attributes */
 	private String drivingLicense;
 	private String nationalID;
-
+	private float balance;
 	private boolean approved;
 	private float avgRating;
 
 	private IRide ride;
 
+
 	/*Constructors*/
 	public Driver (){
+
 		avgRating = 0;
 		approved = false;
+    balance = 0;
 	}
 	
 	/* Methods */
@@ -60,5 +63,16 @@ public class Driver extends ApplicationUser implements IDriver {
 	public IRide getDriverRide() {
 		return this.ride;
 	}
+
+	public double getBalance() {
+		return balance;
+	}
+	
+	public void setBalance(float value) {
+		balance = value;
+	}
+
+	
+	
 
 }

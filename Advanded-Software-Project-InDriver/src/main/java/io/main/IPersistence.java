@@ -1,6 +1,8 @@
 package io.main;
 
+
 import java.util.ArrayList;
+
 
 public interface IPersistence {
 	/*Authorization*/
@@ -30,8 +32,12 @@ public interface IPersistence {
 	public boolean notify(String source, IRide ride);
 	public void addRide(IRide ride);
 	
-	
-	public ArrayList<ApplicationUser> getUsers();
-	
+
+	/*Discount Part*/
+	public void addDiscountDest(String Destination);
+	public boolean searchDiscountDest(String Destination);
+  
+  
+	public ArrayList<ApplicationUser> getUsers();	
 	public ApplicationUser getObj(String username);
 }

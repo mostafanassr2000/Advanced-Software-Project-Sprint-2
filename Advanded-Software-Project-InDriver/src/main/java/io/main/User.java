@@ -1,20 +1,25 @@
 package io.main;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+import java.util.Date;
 
-@RequestMapping("/user")
+
+
 public class User extends ApplicationUser implements IUser{
 	
 	/*Attributes*/
 	private IRide ride;
+
+	private Date birthDate;
+	private boolean firstRide;
+	
+
 	private double receivedOffer;
 	/*Constructors*/
 	
 	public User() {
 		super();
+
 	}
 	
 	/*Methods*/
@@ -29,6 +34,13 @@ public class User extends ApplicationUser implements IUser{
 	}
 	
 	/*Getters*/
+	public Date getBirthDate() {		
+		return birthDate;
+	}
+	
+	public boolean getFirstRide() {
+		return firstRide;
+	}
 	
 	public double getUserOffer() {
 		return receivedOffer;
@@ -37,5 +49,6 @@ public class User extends ApplicationUser implements IUser{
 	public IRide getRide() {
 		return ride;
 	}
+
 	
 }
