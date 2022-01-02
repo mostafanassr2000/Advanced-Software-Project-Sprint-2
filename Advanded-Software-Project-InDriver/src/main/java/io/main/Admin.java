@@ -1,38 +1,52 @@
 package io.main;
 
+import java.util.ArrayList;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+
+@RequestMapping("/admin")
 public class Admin extends ApplicationUser implements IAdmin{
 
-	/*Constructor*/
-	public Admin(String username, String email, String password, String mobileNumber, String keyType) {
-		super(username, email, password, mobileNumber, keyType);
+
+	/*Constructors*/
+	
+	public Admin() {
+		super();
+		//Fixing an error "Parameter 0 of constructor in io.main.Admin required a bean of type 'java.lang.String' that could not be found."
 	}
 	
 	/*Methods*/
 	
 	//Verification Part
-	public void listUnapprovedDrivers() {
-		persistence.listUnapprovedDrivers();
+
+	@GetMapping("/list-unapproved-drivers")
+	public ArrayList<Driver> listUnapprovedDrivers() {
+		return persistence.listUnapprovedDrivers();
 	}
 	
-	public boolean verifyDriver(String driverUserName) {
+	@PutMapping("/verify-driver")
+	public boolean verifyDriver(@RequestBody String driverUserName) {
 		return persistence.verifyDriver(driverUserName);
 	}
 	
 	//Suspension Part
-	public void listSuspendedUsers() {
-		persistence.listSuspendedUsers();
+	public ArrayList<ApplicationUser> listSuspendedUsers() {
+		return persistence.listSuspendedUsers();
 	}
 	
-	public boolean suspend(String username) {
+	@PutMapping("/suspend")
+	public boolean suspend(@RequestBody String username) {
 		return persistence.suspend(username);
 	}
 	
-	public boolean unsuspend(String username) {
+	@PutMapping("/unsuspend")
+	public boolean unsuspend(@RequestBody String username) {
 		return persistence.unsuspend(username);
 	}
-	
-	public String toString() {
-		return "User Name: " + getUsername() + "-----" + "Type: " + keyType(); 
-	}
-
 }

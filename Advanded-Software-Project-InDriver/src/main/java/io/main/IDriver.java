@@ -3,25 +3,19 @@ package io.main;
 public interface IDriver {
 	public void setApproval();
 	public boolean isApproved();
-	public void addFavArea(String favArea);
 	
 	public void update(IRide ride);
-	public void offer(float s);
-	
-	public boolean listRides();
-	public void listDriverRatings();
-
 	public void removeRide();
 	
-	public String getUsername();
+	public IRide getDriverRide();
+	
+	public void setDriverAvgRating(float avgRating);
 	public float getDriverAvgRating();	
 	
-	public IRide getRide();
-	
-	public String toString();
-	public float getBalance();
+
+	public double getBalance();
 	public void setBalance(float value);
-	
+	public String getUsername();
 }
 	
 

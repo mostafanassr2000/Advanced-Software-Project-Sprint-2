@@ -1,34 +1,34 @@
 package io.main;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo (use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes ({@Type (value = Admin.class, name = "admin"), @Type (value = User.class, name = "user"), 
+				@Type (value = Driver.class, name = "driver")})
 public class ApplicationUser {
 	/*Attributes*/
 	protected String username;
 	protected String mobileNumber;
 	protected String email;
+	
+
 	protected String password;
 	protected String keyType;
 	protected boolean suspended;
 	
+	@Autowired
 	protected IPersistence persistence;
-	protected IAuthorize authorizeObj;
 	
-	public ApplicationUser(String username, String email, String password, String mobileNumber, String keyType) {
-		this.username = username;
-		this.mobileNumber = mobileNumber;
-		this.email = email;
-		this.password = password;
-		this.keyType = keyType;
-		this.suspended = false;
+	/*Constructor*/
+	public ApplicationUser() {
+		
 	}
 	
 	/*Methods*/
-	
-	public boolean register(ApplicationUser AU) {
-		return authorizeObj.register(AU, persistence);
-	}
-	
-	public ApplicationUser login(String username, String password) {
-		return authorizeObj.login(username, password, persistence);
-	}
 	
 	public void setSuspension(boolean suspend) {
 		this.suspended = suspend;
@@ -36,14 +36,6 @@ public class ApplicationUser {
 	
 	public boolean isSuspended() {
 		return this.suspended;
-	}
-	
-	public void setAuthorization(IAuthorize authorizeObj) {
-		this.authorizeObj = authorizeObj;
-	}
-	
-	public void setPersistence(IPersistence persistence) {
-		this.persistence = persistence;
 	}
 	
 	/*Getters*/
@@ -56,6 +48,7 @@ public class ApplicationUser {
 		return email;
 	}
 	
+	//@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -64,7 +57,7 @@ public class ApplicationUser {
 		return mobileNumber;
 	}
 	
-	public String keyType() {
+	public String getKeyType() {
 		return keyType;
 	}
 }

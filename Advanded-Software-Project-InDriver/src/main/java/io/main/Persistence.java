@@ -2,33 +2,28 @@ package io.main;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+@Component //Singleton Object
 
-
-@RestController
-@Component
 public class Persistence implements IPersistence{
-
+	
 	public ArrayList<ApplicationUser> applicationUsers;
 	public ArrayList<FavArea> favAreas;
 	public ArrayList<IRide> rides;
 	public ArrayList<String> discountDests;
 	
-	Persistence(){
+	Persistence() {
 		applicationUsers = new ArrayList<ApplicationUser>();
 		favAreas = new ArrayList<FavArea>();
 		rides = new ArrayList<IRide>();
 		discountDests = new ArrayList<String>();
 	}
 	
+	public ArrayList<ApplicationUser> getUsers() {
+		return applicationUsers;
+	}
 	
-	/*Authorization part*/
-	@PostMapping("/register")
-	public boolean register(@RequestBody ApplicationUser AU) {
-
+	public boolean register(ApplicationUser AU) {
+		
 		for(int i = 0; i < applicationUsers.size(); i++) {
 			String currentUsername = applicationUsers.get(i).getUsername();
 			if(currentUsername.equals(AU.getUsername())) {	
@@ -61,20 +56,24 @@ public class Persistence implements IPersistence{
 	}
 	
 	/*Admin Part*/
-	
 	//Verification
-	public void listUnapprovedDrivers() {
+	public ArrayList<Driver> listUnapprovedDrivers() {
+		
+		
+		ArrayList<Driver> unapprovedDrivers = new ArrayList<Driver>();
+		
 		for(int i = 0; i < applicationUsers.size(); i++) {
 			
 			if(applicationUsers.get(i) instanceof Driver) {
-				Driver driver = (Driver) applicationUsers.get(i); //Down Casting
-				if(!driver.isApproved()) {
-					System.out.println("-----------------------------------");
-					System.out.println("Driver " + (i+1) + " info\n");
-					System.out.println(driver);	
-				}	
+				//Driver driver = (Driver) applicationUsers.get(i); //Down Casting
+				//((person)user).function()
+				if(!((Driver)applicationUsers.get(i)).isApproved()) {
+					unapprovedDrivers.add((Driver)applicationUsers.get(i));
+				}
 			}
 		}
+		
+		return unapprovedDrivers;
 	}
 	
 	public boolean verifyDriver(String driverUsername) {
@@ -82,8 +81,8 @@ public class Persistence implements IPersistence{
 		for(int i = 0; i < applicationUsers.size(); i++) {
 
 			if(driverUsername.equals(applicationUsers.get(i).getUsername())) {
-				Driver driver = (Driver) applicationUsers.get(i); //Down Casting
-				driver.setApproval();	//Setting approval to true.
+				//Driver driver = (Driver) applicationUsers.get(i); //Down Casting
+				((Driver)applicationUsers.get(i)).setApproval(); //Setting approval to true.
 				return true;
 			}
 		}
@@ -92,15 +91,17 @@ public class Persistence implements IPersistence{
 	}
 	
 	//Suspension
-	public void listSuspendedUsers() {
+	public ArrayList<ApplicationUser> listSuspendedUsers() {
+		
+		ArrayList<ApplicationUser> suspendedUsers = new ArrayList<ApplicationUser>();
 		
 		for(int i = 0; i < applicationUsers.size(); i++) {
 			if(applicationUsers.get(i).isSuspended()) {	//This user was suspended
-				System.out.println("-----------------------------------");
-				System.out.println("User" + (i+1) + " info");
-				System.out.println(applicationUsers.get(i));
+				suspendedUsers.add(applicationUsers.get(i));
 			}	
 		}
+		
+		return suspendedUsers;
 	}
 	
 	public boolean suspend(String username) {
@@ -122,25 +123,37 @@ public class Persistence implements IPersistence{
 		}
 		return false;	//User hasn't been found
 	}
-	
-	/*User Part*/
-	
+		
 	
 	/*Driver Part*/
-
 	public void addFavArea(FavArea favArea){
 		favAreas.add(favArea);
 	}
 	
-	public boolean listDriverRatings(IDriver driver) {
-		boolean found = false;
-		for(int i = 0; i < rides.size(); i++) {
-			if(rides.get(i).getDriver().getUsername().equals(driver.getUsername())) {
-				 rides.get(i).listRideRating();
-				 found = true;
+	public ArrayList<String> listFavoriteAreas(String driverUsername) {
+		
+		ArrayList<String> driverFavAreas = new ArrayList<String>(); 
+		
+		for(FavArea fa : favAreas) {
+			if(fa.getDriver().getUsername().equals(driverUsername)) {
+				driverFavAreas.add(fa.getFavArea());
 			}
 		}
-		return found;
+		
+		return driverFavAreas;
+	}
+	
+	public ArrayList<IRide> listDriverRatings(IDriver driver) {
+		
+		ArrayList<IRide> driverRides = new ArrayList<IRide>();
+		
+		for(int i = 0; i < rides.size(); i++) {
+			if(rides.get(i).getDriver().getUsername().equals(driver.getUsername())) {
+				driverRides.add(rides.get(i));
+			}
+		}
+		
+		return driverRides;
 	}
 	
 	public float calcDriverAvgRating(IDriver driver) {
@@ -187,8 +200,10 @@ public class Persistence implements IPersistence{
 			if(applicationUsers.get(i) instanceof Driver) {
 				Driver driver = (Driver) applicationUsers.get(i); //Down Casting
 				//Remove this ride from the other drivers who were notified
-				if(!driver.getUsername().equals(ride.getDriver().getUsername()) && driver.getRide().getUser().getUsername().equals(ride.getUser().getUsername())) {
-					driver.removeRide();
+				if(driver.getDriverRide() != null) {
+					if(!driver.getUsername().equals(ride.getDriver().getUsername()) && driver.getDriverRide().getUser().getUsername().equals(ride.getUser().getUsername())) {
+						driver.removeRide();
+					}
 				}
 			}
 		}
@@ -199,26 +214,32 @@ public class Persistence implements IPersistence{
 			if(applicationUsers.get(i) instanceof Driver) {
 				Driver driver = (Driver) applicationUsers.get(i); //Down Casting
 				//Remove this ride from the other drivers who were notified
-				if(driver.getRide().getUser().getUsername().equals(ride.getUser().getUsername())) {
-					driver.removeRide();
+				if(driver.getDriverRide() != null) {
+					if(driver.getDriverRide().getUser().getUsername().equals(ride.getUser().getUsername())) {
+						driver.removeRide();
+					}
 				}
 			}
 		}
 	}
+	
 
-	
-	@GetMapping("/get/users")
-	public ArrayList<ApplicationUser> printUsers() {
-		return applicationUsers;
+	//Get object by username
+	public ApplicationUser getObj(String username) {
+		for(ApplicationUser au : applicationUsers) {
+			if(username.equals(au.getUsername())) {
+				return au;
+			}
+		}
+		return null;
 	}
-	
+
 
 	/*Discount Part*/
 	public void addDiscountDest(String Destination) {
 		for (String d : discountDests) {
 			if (d == Destination)
 				return;
-			
 			discountDests.add(Destination);
 		}
 	}
@@ -240,5 +261,6 @@ public class Persistence implements IPersistence{
 	
 	
 	
+
 	
 }

@@ -1,4 +1,10 @@
 package io.main;
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+
+
 public class Driver extends ApplicationUser implements IDriver {
 
 	/* Attributes */
@@ -10,17 +16,15 @@ public class Driver extends ApplicationUser implements IDriver {
 
 	private IRide ride;
 
-	/* Constructor */
-	public Driver(String userName, String email, String password, String mobileNumber, String keyType,
-			String drivingLicense, String nationalID) {
-		super(userName, email, password, mobileNumber, keyType);
-		this.drivingLicense = drivingLicense;
-		this.nationalID = nationalID;
-		balance = 0;
+
+	/*Constructors*/
+	public Driver (){
+
 		avgRating = 0;
 		approved = false;
+    balance = 0;
 	}
-
+	
 	/* Methods */
 
 	public void setApproval() {
@@ -30,46 +34,19 @@ public class Driver extends ApplicationUser implements IDriver {
 	public boolean isApproved() {
 		return approved;
 	}
-
-	public void addFavArea(String favArea) {
-		FavArea newFavArea = new FavArea(favArea, this);
-		persistence.addFavArea(newFavArea);
-	}
-
+	
 	public void update(IRide ride) {
 		this.ride = ride;
 	}
-
-	public void offer(float offer) {
-		ride.setDriverOffer(offer, this);
-	}
-
-	public boolean listRides() {
-		if (ride == null) {
-			System.out.println("There is no nearby passengers");
-			System.out.println("");
-			return false;
-		}
-
-		System.out.println(this.ride);
-		return true;
-	}
-
-	public void listDriverRatings() {
-
-		this.avgRating = persistence.calcDriverAvgRating(this);
-		System.out.println("Average Rating: " + this.avgRating);
-
-		if (!persistence.listDriverRatings(this)) {
-			System.out.println("You have no user ratings in the meantime.");
-			System.out.println("");
-		}
-	}
-
+	
 	public void removeRide() { // Canceling the ride.
 		ride = null;
+	}	
+	
+	public void setDriverAvgRating(float avgRating) {
+		this.avgRating = avgRating;
 	}
-
+	
 	/* Getters */
 	public String getNationalID() {
 		return nationalID;
@@ -83,24 +60,11 @@ public class Driver extends ApplicationUser implements IDriver {
 		return avgRating;
 	}
 
-	public IRide getRide() {
-		return ride;
+	public IRide getDriverRide() {
+		return this.ride;
 	}
 
-	/*
-	 * public String toString() { return "Driver Name: " + getUsername()+ "\n" +
-	 * "Mobile Number: " + getMobileNumber() + "\n" + "Driver Rating: " +
-	 * getDriverAvgRating(); }
-	 */
-
-	public String toString() {
-		return ("Driver's Username: " + getUsername() + "\n") + ("Driver's Mobile Number: " + getMobileNumber() + "\n")
-				+ ("Driver's National ID: " + getNationalID() + "\n")
-				+ ("Driver's Driving License: " + getDrivingLicense() + "\n")
-				+ ("-----------------------------------\n");
-	}
-
-	public float getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	

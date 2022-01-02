@@ -16,10 +16,13 @@ public interface IRide {
 	public void removeAllRides();
 	
 	public void setDriverOffer(float offer, IDriver driver);
-	public float getOffer();
+	public double getOffer();
 	
 	public IUser getUser();
+	public String getPassengerUsername();
 	public IDriver getDriver();
+	public String getDriverUsername();
+	
 	public String getSource();
 	public String getDestination();
 	

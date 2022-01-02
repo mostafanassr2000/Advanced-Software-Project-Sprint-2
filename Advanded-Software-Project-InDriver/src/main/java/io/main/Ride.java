@@ -1,13 +1,18 @@
 package io.main;
 
+
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 public class Ride implements IRide{
+
 	/*Attributes*/
 	private String source;
 	private String destination;
-	private float offer; //before discounts
-	private float discountedOffer; //after discounts
+	private double discountedOffer; //after discounts
+	private double offer; //before discounts
 	private boolean accepted;
 	private int rate;
 	private int passengersNum;//set in constructor
@@ -15,18 +20,22 @@ public class Ride implements IRide{
 	
 	private IUser user;
 	private IDriver driver;
-	
-	private IPersistence persistence;
+
+	IPersistence persistence;
 	
 	/*Constructor*/
+
 	public Ride(String source, String destination, IUser user, IPersistence persistence
 			,int passengersNum) {
 		this.source = source;
 		this.destination = destination;
-		this.persistence = persistence;
 		this.user = user;
 		this.accepted = false;
 		this.passengersNum = passengersNum;
+		this.persistence = persistence;
+		this.offer = 0.0;
+		
+
 	}
 	
 	/*Methods*/
@@ -34,11 +43,11 @@ public class Ride implements IRide{
 	public boolean requestRide() {
 		return persistence.notify(source, this);
 	}
-	
+
 	public void setDriverOffer(float offer, IDriver driver) {
 		this.offer = offer;
 		this.driver = driver;
-		float rate = discount.calculateDiscount(this);
+		double rate = discount.calculateDiscount(this);
 		this.discountedOffer = offer - (offer*rate);
 		user.receiveOffer(this);
 	}
@@ -59,7 +68,7 @@ public class Ride implements IRide{
 	public void setAcceptance(boolean acceptance) {
 		this.accepted = acceptance;
 		//get the balance of the driver
-		float driverBalance = this.getDriver().getBalance();
+		double driverBalance = this.getDriver().getBalance();
 		this.getDriver().setBalance(driverBalance += offer);
 	}
 	
@@ -68,14 +77,34 @@ public class Ride implements IRide{
 	}
 	
 	/*Getters*/
+	@JsonIgnore
 	public IUser getUser() {
 		return user;
 	}
 	
+	@JsonIgnore
 	public IDriver getDriver() {
 		return driver;
 	}
 
+	public String getPassengerUsername() {
+		if(user == null) {
+			return "";
+		}
+		else {
+			return user.getUsername();
+		}
+	}
+	
+	public String getDriverUsername() {
+		if(driver == null) {
+			return "";
+		}
+		else {
+			return driver.getUsername();
+		}
+	}
+	
 	public String getSource() {
 		return source;
 	}
@@ -88,6 +117,7 @@ public class Ride implements IRide{
 		return destination;
 	}
 	
+
 	public float getOffer() {
 		return discountedOffer;
 	}
