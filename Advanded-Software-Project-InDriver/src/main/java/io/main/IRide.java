@@ -2,6 +2,9 @@ package io.main;
 
 public interface IRide {
 	public boolean requestRide();
+	
+	public int getPassengersNum();
+	
 
 	public void setAcceptance(boolean acceptance);
 	public boolean isAccepted();

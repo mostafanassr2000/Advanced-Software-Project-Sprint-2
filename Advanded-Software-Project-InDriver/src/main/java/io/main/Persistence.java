@@ -2,18 +2,20 @@ package io.main;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
-
 @Component //Singleton Object
+
 public class Persistence implements IPersistence{
 	
 	public ArrayList<ApplicationUser> applicationUsers;
 	public ArrayList<FavArea> favAreas;
 	public ArrayList<IRide> rides;
+	public ArrayList<String> discountDests;
 	
 	Persistence() {
 		applicationUsers = new ArrayList<ApplicationUser>();
 		favAreas = new ArrayList<FavArea>();
 		rides = new ArrayList<IRide>();
+		discountDests = new ArrayList<String>();
 	}
 	
 	public ArrayList<ApplicationUser> getUsers() {
@@ -232,6 +234,33 @@ public class Persistence implements IPersistence{
 		return null;
 	}
 
+
+	/*Discount Part*/
+	public void addDiscountDest(String Destination) {
+		for (String d : discountDests) {
+			if (d == Destination)
+				return;
+			discountDests.add(Destination);
+		}
+	}
+	
+	public boolean searchDiscountDest(String Destination) {
+		for (String d : discountDests) {
+			if (d == Destination)
+				return true;
+			
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 }

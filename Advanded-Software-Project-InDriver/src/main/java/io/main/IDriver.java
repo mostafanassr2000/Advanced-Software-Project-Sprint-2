@@ -12,6 +12,9 @@ public interface IDriver {
 	public void setDriverAvgRating(float avgRating);
 	public float getDriverAvgRating();	
 	
+
+	public double getBalance();
+	public void setBalance(float value);
 	public String getUsername();
 }
 	
