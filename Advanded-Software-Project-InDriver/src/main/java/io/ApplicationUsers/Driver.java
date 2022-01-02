@@ -1,18 +1,18 @@
-package io.main;
+package io.ApplicationUsers;
 
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-
+import io.Actions.IRide;
 
 public class Driver extends ApplicationUser implements IDriver {
 
 	/* Attributes */
 	private String drivingLicense;
 	private String nationalID;
-	private float balance;
+	
+	private double balance;
+	private double avgRating;
+	
 	private boolean approved;
-	private float avgRating;
+	private boolean available;
 
 	private IRide ride;
 
@@ -21,20 +21,13 @@ public class Driver extends ApplicationUser implements IDriver {
 	public Driver (){
 
 		avgRating = 0;
+		balance = 0;
+		
 		approved = false;
-    balance = 0;
+		available = true;
 	}
 	
 	/* Methods */
-
-	public void setApproval() {
-		approved = true;
-	}
-
-	public boolean isApproved() {
-		return approved;
-	}
-	
 	public void update(IRide ride) {
 		this.ride = ride;
 	}
@@ -43,8 +36,21 @@ public class Driver extends ApplicationUser implements IDriver {
 		ride = null;
 	}	
 	
-	public void setDriverAvgRating(float avgRating) {
+	/*Setters*/
+	public void setApproval() {
+		approved = true;
+	}
+	
+	public void setDriverAvgRating(double avgRating) {
 		this.avgRating = avgRating;
+	}
+	
+	public void setAvailability(boolean ava) {
+		this.available = ava;
+	}	
+	
+	public void setBalance(double value) {
+		balance = value;
 	}
 	
 	/* Getters */
@@ -55,24 +61,24 @@ public class Driver extends ApplicationUser implements IDriver {
 	public String getDrivingLicense() {
 		return drivingLicense;
 	}
-
-	public float getDriverAvgRating() {
-		return avgRating;
-	}
-
 	public IRide getDriverRide() {
 		return this.ride;
 	}
 
+	public double getDriverAvgRating() {
+		return avgRating;
+	}
+	
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}	
+
 	public double getBalance() {
 		return balance;
 	}
-	
-	public void setBalance(float value) {
-		balance = value;
-	}
-
-	
-	
 
 }

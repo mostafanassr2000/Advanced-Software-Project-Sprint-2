@@ -1,4 +1,4 @@
-package io.main;
+package io.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.Actions.IRide;
+import io.Actions.Ride;
+import io.ApplicationUsers.IDriver;
+import io.ApplicationUsers.IUser;
+import io.ApplicationUsers.User;
+import io.Persistence.IPersistence;
 
 
 @RestController
@@ -25,12 +32,11 @@ public class UserController {
 	}
 	
 	/*Methods*/
-	
-	@PostMapping("/request-ride/{source}/{destination}")
-	public boolean requestRide(@PathVariable String source, @PathVariable String destination, @PathVariable String username) {
+	@PostMapping("/request-ride/{passengerNumber}/{source}/{destination}")
+	public boolean requestRide(@PathVariable int passengerNumber, @PathVariable String source, @PathVariable String destination, @PathVariable String username) {
 		
 		IUser user = (User) persistence.getObj(username);
-		Ride newRide = new Ride(source, destination, user, persistence);
+		Ride newRide = new Ride(source, destination, user, persistence, passengerNumber);
 		return newRide.requestRide();
 	}
 	
@@ -63,16 +69,9 @@ public class UserController {
 		IDriver driver = user.getRide().getDriver();	//Driver of this ride
 		
 		user.getRide().setRate(rate);
-		persistence.addRide(user.getRide());	//Saving this ride in the database
-
 		driver.setDriverAvgRating(persistence.calcDriverAvgRating(driver));	//Recalculate the new average rating for the driver
 		
-		user.getRide().removeAllRides();
 		user.removeRide();
 	}
 }
-
-
-
-
 

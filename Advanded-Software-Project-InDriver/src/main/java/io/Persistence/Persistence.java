@@ -1,27 +1,55 @@
-package io.main;
+package io.Persistence;
+
+import io.Actions.IRide;
+import io.ApplicationUsers.ApplicationUser;
+import io.ApplicationUsers.Driver;
+import io.ApplicationUsers.IDriver;
+import io.Cores.Event;
+import io.Cores.FavArea;
+import io.Cores.Holiday;
+
 import java.util.ArrayList;
-
 import org.springframework.stereotype.Component;
-@Component //Singleton Object
 
+@Component //Singleton Object
 public class Persistence implements IPersistence{
 	
+	private int rideId;
 	public ArrayList<ApplicationUser> applicationUsers;
 	public ArrayList<FavArea> favAreas;
 	public ArrayList<IRide> rides;
+	public ArrayList<Event> events;
 	public ArrayList<String> discountDests;
+	public ArrayList<Holiday> holidays;
+	
 	
 	Persistence() {
 		applicationUsers = new ArrayList<ApplicationUser>();
 		favAreas = new ArrayList<FavArea>();
 		rides = new ArrayList<IRide>();
+		events = new ArrayList<Event>();
 		discountDests = new ArrayList<String>();
+		holidays = new ArrayList<Holiday>();
+		rideId = 0;
+		
+		holidays();
 	}
 	
 	public ArrayList<ApplicationUser> getUsers() {
 		return applicationUsers;
 	}
 	
+	//Get object by username
+	public ApplicationUser getObj(String username) {
+		for(ApplicationUser au : applicationUsers) {
+			if(username.equals(au.getUsername())) {
+				return au;
+			}
+		}
+		return null;
+	}
+
+	/*Authorization Part*/
 	public boolean register(ApplicationUser AU) {
 		
 		for(int i = 0; i < applicationUsers.size(); i++) {
@@ -156,9 +184,9 @@ public class Persistence implements IPersistence{
 		return driverRides;
 	}
 	
-	public float calcDriverAvgRating(IDriver driver) {
-		int sumOfRates = 0;
-		int numOfRates = 0;
+	public double calcDriverAvgRating(IDriver driver) {
+		double sumOfRates = 0.0;
+		double numOfRates = 0.0;
 
 		for(int i = 0; i < rides.size(); i++) {
 			if(rides.get(i).getDriver().getUsername().equals(driver.getUsername())) {
@@ -176,13 +204,13 @@ public class Persistence implements IPersistence{
 	}
 	
 	/*Ride Part*/
-	public boolean notify(String source, IRide ride) {
+	public boolean notify(IRide ride) {
 
 		boolean found = false;
 		
-		//notify all drivers who have the source area as their favorite area
+		//notify all drivers who have the source area as their favorite area while they are available
 		for(FavArea favArea : favAreas) {	
-			if(favArea.getFavArea().equals(source)) {
+			if(favArea.getFavArea().equals(ride.getSource()) && favArea.getDriver().isAvailable()) {
 				favArea.getDriver().update(ride);
 				found = true;
 			}
@@ -223,44 +251,139 @@ public class Persistence implements IPersistence{
 		}
 	}
 	
-
-	//Get object by username
-	public ApplicationUser getObj(String username) {
-		for(ApplicationUser au : applicationUsers) {
-			if(username.equals(au.getUsername())) {
-				return au;
-			}
-		}
-		return null;
-	}
-
-
-	/*Discount Part*/
-	public void addDiscountDest(String Destination) {
-		for (String d : discountDests) {
-			if (d == Destination)
-				return;
-			discountDests.add(Destination);
-		}
+	public int generateRideId() {	//Generating new id for each ride
+		return ++rideId;
 	}
 	
-	public boolean searchDiscountDest(String Destination) {
+	public int getNumOfRides() {
+		return rides.size();
+	}
+	
+	/*Events Part*/
+	public void addEvent(Event event) {
+		events.add(event);
+	}
+	
+	//Used by admin
+	public ArrayList<Event> showEvents(int rideId) {
+		
+		ArrayList<Event> rideEvents = new ArrayList<Event>();
+		
+		for(Event r : events) {
+			if(r.getRideId() == rideId) {
+				rideEvents.add(r);
+			}
+		}
+		return rideEvents;
+	}
+	
+	/*Discount Part*/
+	public boolean addDiscountDest(String destination) {
+		if(searchDiscountDest(destination))	//Duplicate destination
+			return false;
+		
+		discountDests.add(destination);
+		return true;
+	}
+	
+	public boolean searchDiscountDest(String destination) {
 		for (String d : discountDests) {
-			if (d == Destination)
+			if (d.equals(destination))
 				return true;
-			
 		}
 		return false;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	/*Holiday Part*/
+	public void holidays() {
+		
+		Holiday holiday0 = new Holiday("Check Day!!", "02/01");
+		holidays.add(holiday0);
+		
+		Holiday holiday1 = new Holiday("Coptic Christmas Day", "07/01");
+		holidays.add(holiday1);
+		
+		Holiday holiday2 = new Holiday("Revolution Day", "25/01");
+		holidays.add(holiday2);
+		
+		Holiday holiday3 = new Holiday("Coptic Good Friday", "22/04");
+		holidays.add(holiday3);
+		
+		Holiday holiday4 = new Holiday("Coptic Holy Saturday", "23/04");
+		holidays.add(holiday4);
+		
+		Holiday holiday5 = new Holiday("Coptic Easter Sunday", "24/04");
+		holidays.add(holiday5);
+		
+		Holiday holiday6 = new Holiday("Spring Festival", "25/04");
+		holidays.add(holiday6);
+		
+		Holiday holiday7 = new Holiday("Labor Day", "01/05");
+		holidays.add(holiday7);
+		
+		Holiday holiday8 = new Holiday("Eid el Fitr Day 1", "03/05");
+		holidays.add(holiday8);
+		
+		Holiday holiday9 = new Holiday("Eid el Fitr Day 2", "04/05");
+		holidays.add(holiday9);
+		
+		Holiday holiday10 = new Holiday("Eid el Fitr Day 3", "05/05");
+		holidays.add(holiday10);
+		
+		Holiday holiday11 = new Holiday("June 30 Revolution", "30/06");
+		holidays.add(holiday11);
+		
+		Holiday holiday12 = new Holiday("Arafat Day", "09/07");
+		holidays.add(holiday12);
+		
+		Holiday holiday13 = new Holiday("Eid al-Adha Day 1", "10/07");
+		holidays.add(holiday13);
 
+		Holiday holiday14 = new Holiday("Eid al-Adha Day 2", "11/07");
+		holidays.add(holiday14);
+		
+		Holiday holiday15 = new Holiday("Eid al-Adha Day 3", "12/07");
+		holidays.add(holiday15);
+		
+		Holiday holiday16 = new Holiday("Eid al-Adha Day 4", "13/07");
+		holidays.add(holiday16);
+		
+		Holiday holiday17 = new Holiday("Revolution Day July 23", "23/07");
+		holidays.add(holiday17);
+		
+		Holiday holiday18 = new Holiday("Muharram", "30/07");
+		holidays.add(holiday18);
+		
+		Holiday holiday19 = new Holiday("Ashura", "08/08");
+		holidays.add(holiday19);
+		
+		Holiday holiday20 = new Holiday("Flooding of the Nile", "15/08");
+		holidays.add(holiday20);
+		
+		Holiday holiday21 = new Holiday("Sandra's Birthday", "01/09");
+		holidays.add(holiday21);
+		
+		Holiday holiday22 = new Holiday("Nayrouz", "11/09");
+		holidays.add(holiday22);
+		
+		Holiday holiday23 = new Holiday("Armed Forced Day", "06/10");
+		holidays.add(holiday23);
+
+		Holiday holiday24 = new Holiday("Prophet Mohamed's Birthday", "08/10");
+		holidays.add(holiday24);
+		
+		Holiday holiday25 = new Holiday("Mostafa's Birthday", "30/11");
+		holidays.add(holiday25);
+		
+	}
+	
+	public boolean isHoliday(String date) {
+		for(Holiday h : holidays) {
+			if(date.equals(h.getHolidayDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }

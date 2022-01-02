@@ -3,17 +3,10 @@ package io.main;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-
-//@SpringBootApplication
-@SpringBootApplication(scanBasePackages={"io.main"})
+@SpringBootApplication(scanBasePackages={"io.main", "io.Actions", "io.ApplicationUsers", "io.Controllers", "io.Cores", "io.Persistence"})
 public class Main {
-
-	//public static IPersistence p = new Persistence();
-	
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
-
 	}
 
 }

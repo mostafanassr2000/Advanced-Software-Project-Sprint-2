@@ -1,10 +1,12 @@
-package io.main;
+package io.Actions;
 
-
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.ApplicationUsers.IDriver;
+import io.ApplicationUsers.IUser;
+import io.Cores.Event;
+import io.Persistence.IPersistence;
 
 public class Ride implements IRide{
 
@@ -13,10 +15,16 @@ public class Ride implements IRide{
 	private String destination;
 	private double discountedOffer; //after discounts
 	private double offer; //before discounts
+	
 	private boolean accepted;
-	private int rate;
+	private boolean arrival;
+	private boolean terminated;
+	
+	private int rideId;
+	private double rate;
 	private int passengersNum;//set in constructor
-	private Discount discount;
+	
+	private IDiscount discount;
 	
 	private IUser user;
 	private IDriver driver;
@@ -30,29 +38,42 @@ public class Ride implements IRide{
 		this.source = source;
 		this.destination = destination;
 		this.user = user;
+		
 		this.accepted = false;
+		this.arrival = false;
+		this.terminated = false;
+		
 		this.passengersNum = passengersNum;
 		this.persistence = persistence;
 		this.offer = 0.0;
 		
-
+		this.rideId = this.persistence.generateRideId();	//Generating new id for this ride
+		this.discount = new Discount(persistence);
 	}
 	
 	/*Methods*/
 	
 	public boolean requestRide() {
-		return persistence.notify(source, this);
+		return persistence.notify(this);
 	}
 
 	public void setDriverOffer(float offer, IDriver driver) {
 		this.offer = offer;
 		this.driver = driver;
+		
+		//New Event
+		Event newEvent = new Event("Captain offer", LocalDateTime.now(), this);
+		persistence.addEvent(newEvent);
+		
+		//Add Discount
 		double rate = discount.calculateDiscount(this);
 		this.discountedOffer = offer - (offer*rate);
+		
+		//Send the offer to the user
 		user.receiveOffer(this);
 	}
 	
-	public void setRate(int rate) {
+	public void setRate(double rate) {
 		this.rate = rate;
 	}
 	
@@ -66,14 +87,54 @@ public class Ride implements IRide{
 	
 	//Ride Acceptance
 	public void setAcceptance(boolean acceptance) {
-		this.accepted = acceptance;
-		//get the balance of the driver
-		double driverBalance = this.getDriver().getBalance();
-		this.getDriver().setBalance(driverBalance += offer);
+		this.accepted = acceptance;	
+		
+		if(acceptance) {	//New event occurs
+			Event newEvent = new Event("Ride has been accepted", LocalDateTime.now(), this);
+			persistence.addEvent(newEvent);
+		}
+		else {	//If the ride was rejected
+			driver.setAvailability(true);	
+		}
 	}
 	
 	public boolean isAccepted() {
 		return accepted;
+	}
+	
+	public void setArrival() {
+		this.arrival = true;
+		
+		//New Event
+		Event newEvent = new Event("Driver has been arrived", LocalDateTime.now(), this);
+		persistence.addEvent(newEvent);
+		
+	}
+	
+	public boolean isArrived() {
+		return arrival;
+	}
+	
+	//Ride Termination
+	public void setTermination() {
+		this.terminated = true;
+		
+		if(user.isFirstRide()) {
+			user.terminateFirstRide();	//Setting the first ride to false
+		}
+		
+		//New Event
+		Event newEvent = new Event("Ride has been terminated", LocalDateTime.now(), this);
+		persistence.addEvent(newEvent);
+		
+		//get the balance of the driver
+		double driverBalance = this.getDriver().getBalance();
+		driver.setBalance(driverBalance += offer);
+		driver.removeRide();
+	}
+	
+	public boolean isTerminated() {
+		return terminated;
 	}
 	
 	/*Getters*/
@@ -116,27 +177,17 @@ public class Ride implements IRide{
 	public String getDestination() {
 		return destination;
 	}
-	
 
-	public float getOffer() {
+	public double getOffer() {
 		return discountedOffer;
 	}
 
-	public int getRate() {
+	public double getRate() {
 		return rate;
 	}
-	
-	public void listRideRating() {
-		System.out.println("--------------------------");
-		System.out.println("Username: " + user.getUsername() );
-		System.out.println("Rating: " + getRate());
-		System.out.println("--------------------------");	
-	}
-	
-	public String toString() {
-		return "User: " + user.getUsername() + "\n" +
-			   "Source: " + getSource() + "\n" + 
-			   "Destination: " + getDestination() + "\n";
+
+	public int getRideId() {
+		return rideId;
 	}
 
 }

@@ -1,4 +1,4 @@
-package io.main;
+package io.Controllers;
 
 import java.util.ArrayList;
 
@@ -6,9 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.Actions.IRide;
+import io.ApplicationUsers.Driver;
+import io.ApplicationUsers.IDriver;
+import io.Cores.FavArea;
+import io.Persistence.IPersistence;
 
 @RestController
 @RequestMapping("/driver/{driverUsername}")
@@ -45,6 +52,7 @@ public class DriverController {
 	@PostMapping("/offer")
 	public void offer(@RequestBody float offer, @PathVariable String driverUsername) {
 		IDriver driver = (Driver) persistence.getObj(driverUsername); // Getting the object of the driver by his username
+		driver.setAvailability(false);
 		driver.getDriverRide().setDriverOffer(offer, driver);
 	}
 
@@ -59,5 +67,23 @@ public class DriverController {
 		IDriver driver = (Driver) persistence.getObj(driverUsername); // Getting the object of the driver by his username
 		return persistence.listDriverRatings(driver);
 	}
+	
+	@PutMapping("/arrived")
+	public void setDriverArrival(@PathVariable String driverUsername) {
+		IDriver driver = (Driver) persistence.getObj(driverUsername); // Getting the object of the driver by his username
+		driver.getDriverRide().setArrival();
+	}
+	
+	@PutMapping("/end-ride")
+	public void terminateRide(@PathVariable String driverUsername) {
+		
+		IDriver driver = (Driver) persistence.getObj(driverUsername); // Getting the object of the driver by his username
+	
+		driver.setAvailability(true);
+		persistence.addRide(driver.getDriverRide());	//Saving this ride in the database
+		
+		driver.getDriverRide().setTermination(); //End ride
+	}
+	
 	
 }
