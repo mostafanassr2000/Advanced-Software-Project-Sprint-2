@@ -10,7 +10,7 @@ public class Driver extends ApplicationUser implements IDriver {
 	/* Attributes */
 	private String drivingLicense;
 	private String nationalID;
-	private float balance;
+	private double balance;
 	private boolean approved;
 	private float avgRating;
 
@@ -22,7 +22,7 @@ public class Driver extends ApplicationUser implements IDriver {
 
 		avgRating = 0;
 		approved = false;
-    balance = 0;
+		balance = 0;
 	}
 	
 	/* Methods */
@@ -68,7 +68,7 @@ public class Driver extends ApplicationUser implements IDriver {
 		return balance;
 	}
 	
-	public void setBalance(float value) {
+	public void setBalance(double value) {
 		balance = value;
 	}
 

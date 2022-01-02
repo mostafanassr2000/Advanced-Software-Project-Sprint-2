@@ -8,6 +8,9 @@ public interface IRide {
 
 	public void setAcceptance(boolean acceptance);
 	public boolean isAccepted();
+	public void setTermination();
+	public boolean isTerminated();
+	
 	
 	public void setRate(int rate);
 	public int getRate();
@@ -26,6 +29,4 @@ public interface IRide {
 	public String getSource();
 	public String getDestination();
 	
-	public void listRideRating();
-	public String toString();
 }

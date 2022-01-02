@@ -14,6 +14,7 @@ public class Ride implements IRide{
 	private double discountedOffer; //after discounts
 	private double offer; //before discounts
 	private boolean accepted;
+	private boolean terminated;
 	private int rate;
 	private int passengersNum;//set in constructor
 	private Discount discount;
@@ -34,8 +35,8 @@ public class Ride implements IRide{
 		this.passengersNum = passengersNum;
 		this.persistence = persistence;
 		this.offer = 0.0;
-		
-
+	
+		discount = new Discount(persistence);
 	}
 	
 	/*Methods*/
@@ -66,15 +67,30 @@ public class Ride implements IRide{
 	
 	//Ride Acceptance
 	public void setAcceptance(boolean acceptance) {
-		this.accepted = acceptance;
-		//get the balance of the driver
-		double driverBalance = this.getDriver().getBalance();
-		this.getDriver().setBalance(driverBalance += offer);
+		this.accepted = acceptance;	
 	}
 	
 	public boolean isAccepted() {
 		return accepted;
 	}
+	
+	//Ride Termination
+	public void setTermination() {
+		this.terminated = true;
+		
+		if(user.isFirstRide()) {
+			user.setFirstRide();	//Setting the first ride to false
+		}
+		
+		//get the balance of the driver
+		double driverBalance = this.getDriver().getBalance();
+		this.getDriver().setBalance(driverBalance += offer);
+	}
+	
+	public boolean isTerminated() {
+		return terminated;
+	}
+	
 	
 	/*Getters*/
 	@JsonIgnore
@@ -116,27 +132,16 @@ public class Ride implements IRide{
 	public String getDestination() {
 		return destination;
 	}
-	
 
-	public float getOffer() {
+	public double getOffer() {
 		return discountedOffer;
 	}
 
 	public int getRate() {
 		return rate;
 	}
+
 	
-	public void listRideRating() {
-		System.out.println("--------------------------");
-		System.out.println("Username: " + user.getUsername() );
-		System.out.println("Rating: " + getRate());
-		System.out.println("--------------------------");	
-	}
-	
-	public String toString() {
-		return "User: " + user.getUsername() + "\n" +
-			   "Source: " + getSource() + "\n" + 
-			   "Destination: " + getDestination() + "\n";
-	}
+
 
 }

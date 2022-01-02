@@ -1,33 +1,34 @@
 package io.main;
 
 import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 
 public class Discount {
 	
 	@Autowired
 	IPersistence persistence;
+	
+	public Discount(IPersistence persistence) {
+		this.persistence = persistence;
+	}
+	
 
-	public float calculateDiscount(Ride ride) {
-		float rate = 0;
+	public double calculateDiscount(Ride ride) {
+		double rate = 0;
 		
 		//birthday
 		Date today = new Date();
-		today.setHours(0);
-		if (today.compareTo(ride.getUser().getBirthDate()) ==0) 
-			rate +=0.10;
 		
+		if (today.equals(ride.getUser().getBirthDate())) 
+			rate +=0.10;
 		
 		//location selected by admin
 		if(persistence.searchDiscountDest(ride.getDestination())) 
 			rate += 0.10;
 		
-		
 		//first Ride
-		if(ride.getUser().getFirstRide())
+		if(ride.getUser().isFirstRide())
 			rate += 0.10;
 		
 		//two passengers

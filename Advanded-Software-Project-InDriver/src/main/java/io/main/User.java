@@ -1,29 +1,20 @@
 package io.main;
 
-
-import java.util.Date;
-
-
-
 public class User extends ApplicationUser implements IUser{
 	
 	/*Attributes*/
 	private IRide ride;
-
-	private Date birthDate;
 	private boolean firstRide;
-	
-
 	private double receivedOffer;
-	/*Constructors*/
 	
+	/*Constructor*/
+
 	public User() {
 		super();
-
+		firstRide = true;
 	}
 	
 	/*Methods*/
-
 	public void receiveOffer(IRide ride) {	//Receives the offer from the driver
 		receivedOffer = ride.getOffer();
 		this.ride = ride;
@@ -34,11 +25,11 @@ public class User extends ApplicationUser implements IUser{
 	}
 	
 	/*Getters*/
-	public Date getBirthDate() {		
-		return birthDate;
+	public void setFirstRide() {
+		firstRide = false;
 	}
 	
-	public boolean getFirstRide() {
+	public boolean isFirstRide() {
 		return firstRide;
 	}
 	

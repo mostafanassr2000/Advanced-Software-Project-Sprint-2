@@ -34,7 +34,7 @@ public interface IPersistence {
 	
 
 	/*Discount Part*/
-	public void addDiscountDest(String Destination);
+	public boolean addDiscountDest(String Destination);
 	public boolean searchDiscountDest(String Destination);
   
   

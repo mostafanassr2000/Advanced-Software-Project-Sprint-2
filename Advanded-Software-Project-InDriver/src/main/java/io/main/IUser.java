@@ -4,9 +4,6 @@ import java.util.Date;
 
 public interface IUser {
 
-
-	public boolean requestRide(String s, String d, String username, int passengersNum);
-
 	public void receiveOffer(IRide ride);
 	public void removeRide();
 	
@@ -15,5 +12,6 @@ public interface IUser {
 	public IRide getRide();
 	
 	public Date getBirthDate();
-	public boolean getFirstRide();
+	public void setFirstRide();
+	public boolean isFirstRide();
 }

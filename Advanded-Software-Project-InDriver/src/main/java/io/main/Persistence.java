@@ -1,9 +1,10 @@
 package io.main;
 import java.util.ArrayList;
-
 import org.springframework.stereotype.Component;
-@Component //Singleton Object
 
+
+
+@Component //Singleton Object
 public class Persistence implements IPersistence{
 	
 	public ArrayList<ApplicationUser> applicationUsers;
@@ -236,12 +237,12 @@ public class Persistence implements IPersistence{
 
 
 	/*Discount Part*/
-	public void addDiscountDest(String Destination) {
-		for (String d : discountDests) {
-			if (d == Destination)
-				return;
-			discountDests.add(Destination);
-		}
+	public boolean addDiscountDest(String Destination) {
+		if(searchDiscountDest(Destination))	//Duplicate destination
+			return false;
+		
+		discountDests.add(Destination);
+		return true;
 	}
 	
 	public boolean searchDiscountDest(String Destination) {

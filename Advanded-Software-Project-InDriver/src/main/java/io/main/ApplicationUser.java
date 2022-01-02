@@ -1,5 +1,7 @@
 package io.main;
 
+import java.sql.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -14,6 +16,7 @@ public class ApplicationUser {
 	protected String username;
 	protected String mobileNumber;
 	protected String email;
+	protected Date birthDate;
 	
 
 	protected String password;
@@ -57,7 +60,13 @@ public class ApplicationUser {
 		return mobileNumber;
 	}
 	
+	public Date getBirthDate() {
+		return birthDate;
+	}
+	
 	public String getKeyType() {
 		return keyType;
 	}
+	
+	
 }

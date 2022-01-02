@@ -14,7 +14,7 @@ public interface IDriver {
 	
 
 	public double getBalance();
-	public void setBalance(float value);
+	public void setBalance(double value);
 	public String getUsername();
 }
 	
