@@ -70,5 +70,8 @@ public class User extends ApplicationUser implements IUser{
 				("-----------------------------------\n");      
 	}
 
+
+	
+
 	
 }

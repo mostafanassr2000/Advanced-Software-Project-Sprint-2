@@ -1,4 +1,8 @@
 package io.main;
+
+import org.springframework.stereotype.Component;
+
+@Component 
 public interface IPersistence {
 	/*Authorization*/
 	public boolean register(ApplicationUser AU);
@@ -24,4 +28,8 @@ public interface IPersistence {
 	/*Ride Part*/
 	public boolean notify(String source, IRide ride);
 	public void addRide(IRide ride);
+	
+	/*Discount Part*/
+	public void addDiscountDest(String Destination);
+	public boolean searchDiscountDest(String Destination);
 }

@@ -3,7 +3,7 @@ package io.main;
 import java.util.Date;
 
 public interface IUser {
-	public boolean requestRide(String s, String d);
+	public boolean requestRide(String s, String d, int passengersNum);
 	public void receiveOffer(IRide ride);
 	
 	public void setRideStatus(boolean status);

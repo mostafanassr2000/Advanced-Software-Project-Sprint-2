@@ -1,6 +1,7 @@
 package io.main;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,16 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@Component
 public class Persistence implements IPersistence{
 
 	public ArrayList<ApplicationUser> applicationUsers;
 	public ArrayList<FavArea> favAreas;
 	public ArrayList<IRide> rides;
+	public ArrayList<String> discountDests;
 	
 	Persistence(){
 		applicationUsers = new ArrayList<ApplicationUser>();
 		favAreas = new ArrayList<FavArea>();
 		rides = new ArrayList<IRide>();
+		discountDests = new ArrayList<String>();
 	}
 	
 	
@@ -209,6 +213,25 @@ public class Persistence implements IPersistence{
 	}
 	
 
+	/*Discount Part*/
+	public void addDiscountDest(String Destination) {
+		for (String d : discountDests) {
+			if (d == Destination)
+				return;
+			
+			discountDests.add(Destination);
+		}
+	}
+	
+	public boolean searchDiscountDest(String Destination) {
+		for (String d : discountDests) {
+			if (d == Destination)
+				return true;
+			
+		}
+		return false;
+	}
+	
 	
 	
 	
