@@ -100,12 +100,10 @@ public class Driver extends ApplicationUser implements IDriver {
 				+ ("-----------------------------------\n");
 	}
 
-	@Override
 	public float getBalance() {
 		return balance;
 	}
-
-	@Override
+	
 	public void setBalance(float value) {
 		balance = value;
 	}
